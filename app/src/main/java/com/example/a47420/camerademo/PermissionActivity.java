@@ -29,15 +29,15 @@ public class PermissionActivity extends Activity {
         setContentView(R.layout.activity_permission);
         PermissionManager permissionManager = PermissionManager.getInstance(getApplicationContext());
         permissionManager.execute(this,needPermissions);
-        if (permissionManager.getGrantedInfo(needPermissions)){
-            startActivity(new Intent(PermissionActivity.this,MainActivity.class));
-        }
+//        if (permissionManager.getGrantedInfo(needPermissions)){
+//            startActivity(new Intent(PermissionActivity.this,MainActivity.class));
+//        }
 
 
         findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(PermissionActivity.this,MainActivity.class));
+                startActivity(new Intent(PermissionActivity.this,CameraActivity.class));
             }
         });
     }

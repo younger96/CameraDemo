@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -24,6 +25,23 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    //保存照片
+    public static String saveBitmap(byte[] bytes) {
+        String jpegName = rootPath + "/" + getTime() + ".jpg";
+        try {
+            File file = new File(jpegName);
+            if(!file.exists())
+                //创建文件
+                file.createNewFile();
+            FileOutputStream outputStream = new FileOutputStream(jpegName);
+            outputStream.write(bytes);
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return jpegName;
     }
 
     //获取视频存储路径
