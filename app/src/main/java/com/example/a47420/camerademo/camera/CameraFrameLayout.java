@@ -2,11 +2,15 @@ package com.example.a47420.camerademo.camera;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -25,12 +29,14 @@ import java.io.File;
  * 功能描述：
  */
 public class CameraFrameLayout extends FrameLayout implements View.OnClickListener {
+    private static final String TAG = "CameraFrameLayout";
     private Button btnCapture;
     private Button btnLight;
     private SurfaceView surfaceView;
     private CameraController mCameraController;
 
     private Context mContext;
+
 
     public CameraFrameLayout(Context context) {
         this(context, null);
@@ -50,12 +56,21 @@ public class CameraFrameLayout extends FrameLayout implements View.OnClickListen
         mCameraController = new CameraController(surfaceView);
         btnCapture.setOnClickListener(this);
         btnLight.setOnClickListener(this);
+        surfaceView.post(new Runnable() {
+            @Override
+            public void run() {
+                mCameraController.setDisplayWidth(surfaceView.getWidth());
+                mCameraController.setDisplayHeight(surfaceView.getHeight());
+            }
+        });
+
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
+                Log.i(TAG, "onTouchEvent: "+event.getX()+"  "+event.getY());
                 handleFocus((int)event.getX(),(int)event.getY());
                 break;
         }
@@ -63,9 +78,7 @@ public class CameraFrameLayout extends FrameLayout implements View.OnClickListen
     }
 
     private void handleFocus(int x, int y) {
-        int length = SizeUtils.dp2px(20);
-        Rect rect = new Rect(x-length,y-length,x+length,y+length);
-        mCameraController.doFocusArea(rect);
+        mCameraController.doFocusArea(x,y);
     }
 
     public void openCamera() {

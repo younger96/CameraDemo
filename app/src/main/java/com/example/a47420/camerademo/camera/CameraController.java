@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
@@ -17,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.example.a47420.camerademo.util.FileUtil;
+import com.example.a47420.camerademo.util.SizeUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +39,8 @@ public class CameraController implements ICamera{
     private SurfaceHolder mSurfaceHolder;
 
     private SurfaceView mSurfaceView;
-
+    private static int displayWidth;
+    private static int displayHeight;//设置展示的控件大小
 
     private float displayScale;
     private int mToneValue = 0;//声音大小
@@ -102,11 +105,16 @@ public class CameraController implements ICamera{
     }
 
     @Override
-    public void doFocusArea(Rect focusRect) {//对焦
+    public void doFocusArea(int x, int y) {//对焦
+        if (displayWidth == 0 || displayHeight == 0){
+            return;
+        }
         camera.cancelAutoFocus();
+
+        Rect focusRect = calculateTapArea(x,y);
         Camera.Parameters parameters;
         parameters = camera.getParameters();
-        if (parameters.getMaxNumFocusAreas() > 0) {
+        if (parameters.getMaxNumFocusAreas() > 0) {//支持对焦区域的个数
             List<Camera.Area> focusAreas = new ArrayList<>();
             focusAreas.add(new Camera.Area(focusRect, 800));
             parameters.setFocusAreas(focusAreas);
@@ -174,6 +182,7 @@ public class CameraController implements ICamera{
 
     //相机使用第三步，设置相机预览方向
     private void setDisplayOrientation(Camera camera,int rotation){
+        Log.i(TAG, "setDisplayOrientation: "+rotation);
         if(rotation== Surface.ROTATION_0||rotation==Surface.ROTATION_180){
             camera.setDisplayOrientation(90);
         }else{
@@ -218,5 +227,38 @@ public class CameraController implements ICamera{
         return cameraId>=0&&cameraId<Camera.getNumberOfCameras();
     }
 
+    public void setDisplayWidth(int displayWidth) {
+        CameraController.displayWidth = displayWidth;
+    }
 
+    public void setDisplayHeight(int displayHeight) {
+        CameraController.displayHeight = displayHeight;
+    }
+
+    //将点击的对焦点绘制成5*50的矩阵区域，区域在1000*1000内
+    private static Rect calculateTapArea(float x, float y) {
+        float focusAreaSize = 50;
+        float focusSize = SizeUtils.dp2px(20);
+        int centerX = (int) (x / displayWidth * 2000 - 1000);
+        int centerY = (int) (y / displayHeight * 2000 - 1000);
+
+        int halfAreaSize = (int) (focusAreaSize / 2);
+        RectF rectF = new RectF(clamp(centerX - halfAreaSize, -1000, 1000)
+                , clamp(centerY - halfAreaSize, -1000, 1000)
+                , clamp(centerX + halfAreaSize, -1000, 1000)
+                , clamp(centerY + halfAreaSize, -1000, 1000));
+        return new Rect(Math.round(rectF.left), Math.round(rectF.top), Math.round(rectF.right), Math.round(rectF.bottom));
+    }
+
+
+    //min <= x <= max
+    private static int clamp(int x, int min, int max) {
+        if (x > max) {
+            return max;
+        }
+        if (x < min) {
+            return min;
+        }
+        return x;
+    }
 }
