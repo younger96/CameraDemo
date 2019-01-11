@@ -1,15 +1,10 @@
 package com.example.a47420.camerademo.camera;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.hardware.Camera;
-import android.media.AudioManager;
 import android.media.ToneGenerator;
-import android.net.Uri;
-import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -18,9 +13,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.example.a47420.camerademo.util.FileUtil;
-import com.example.a47420.camerademo.util.SizeUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -105,31 +98,48 @@ public class CameraController implements ICamera{
     }
 
     @Override
-    public void doFocusArea(int x, int y) {//对焦
+    public void doFocusMetringArea(int x, int y) {//对焦
         if (displayWidth == 0 || displayHeight == 0){
             return;
         }
         camera.cancelAutoFocus();
 
-        Rect focusRect = calculateTapArea(x,y);
+        Rect focusRect = calculateTapArea(x,y,1f);
+        Rect metringRect = calculateTapArea(x,y,1f);
+
         Camera.Parameters parameters;
         parameters = camera.getParameters();
-        if (parameters.getMaxNumFocusAreas() > 0) {//支持对焦区域的个数
+        //对焦
+        if (parameters.getMaxNumFocusAreas() > 0) {//支持对焦区域的个数,暂时只需要一个
             List<Camera.Area> focusAreas = new ArrayList<>();
             focusAreas.add(new Camera.Area(focusRect, 800));
             parameters.setFocusAreas(focusAreas);
         } else {
             Log.i(TAG, "focus areas not supported");
         }
+
+        //测光
+        if (parameters.getMaxNumMeteringAreas() > 0) {
+            List<Camera.Area> meteringAreas = new ArrayList<>();
+            meteringAreas.add(new Camera.Area(metringRect, 800));
+            parameters.setMeteringAreas(meteringAreas);
+        }else {
+            Log.i(TAG, "metering areas not supported");
+        }
+
+
         final String currentFocusMode = parameters.getFocusMode();
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_MACRO);
         camera.setParameters(parameters);
         camera.autoFocus(new Camera.AutoFocusCallback() {
             @Override
             public void onAutoFocus(boolean success, Camera camera) {
-                Camera.Parameters params = camera.getParameters();
-                params.setFocusMode(currentFocusMode);
-                camera.setParameters(params);
+                Log.i(TAG, "onAutoFocus: Auto"+success);
+                if (success){
+                    Camera.Parameters params = camera.getParameters();
+                    params.setFocusMode(currentFocusMode);
+                    camera.setParameters(params);
+                }
             }
         });
     }
@@ -235,20 +245,68 @@ public class CameraController implements ICamera{
         CameraController.displayHeight = displayHeight;
     }
 
-    //将点击的对焦点绘制成5*50的矩阵区域，区域在1000*1000内
-    private static Rect calculateTapArea(float x, float y) {
-        float focusAreaSize = 50;
-        float focusSize = SizeUtils.dp2px(20);
-        int centerX = (int) (x / displayWidth * 2000 - 1000);
-        int centerY = (int) (y / displayHeight * 2000 - 1000);
+    //将点击的对焦点绘制成300*300的矩阵区域，区域在1000*1000内
+    private static Rect calculateTapArea(float x, float y, float scaleSize) {
+        int focusAreaSize = (int) (300 * scaleSize);
+        int centerY = (int) (1000 - x / displayWidth * 2000);
+        int centerX = (int) (y / displayHeight * 2000 - 1000);
 
-        int halfAreaSize = (int) (focusAreaSize / 2);
-        RectF rectF = new RectF(clamp(centerX - halfAreaSize, -1000, 1000)
-                , clamp(centerY - halfAreaSize, -1000, 1000)
-                , clamp(centerX + halfAreaSize, -1000, 1000)
-                , clamp(centerY + halfAreaSize, -1000, 1000));
-        return new Rect(Math.round(rectF.left), Math.round(rectF.top), Math.round(rectF.right), Math.round(rectF.bottom));
+        int halfAreaSize = focusAreaSize / 2;
+        Rect rect = new Rect();
+        if (centerX > 1000-halfAreaSize || centerX < -1000+halfAreaSize){//排除边界情况
+            boolean isX = centerX>0;
+            rect.left = isX?1000-focusAreaSize:-1000;
+            rect.right = isX?1000:-1000+focusAreaSize;
+        }else {
+            rect.left = centerX-halfAreaSize;
+            rect.right = centerX+halfAreaSize;
+        }
+
+        if (centerY > 1000-halfAreaSize || centerY < -1000+halfAreaSize){
+            boolean isY = centerY>0;
+            rect.top = isY?1000-focusAreaSize:-1000;
+            rect.bottom = isY?1000:-1000+focusAreaSize;
+        }else {
+            rect.top = centerY-halfAreaSize;
+            rect.bottom = centerY+halfAreaSize;
+        }
+
+        Log.i(TAG, "calculateTapAreaXY: "+"  x:"+x+"  y:"+y+" cX:"+centerX+"  cY:"+centerY);
+        Log.i(TAG, "calculateTapAreaRect: "+"  left:"+rect.left+"  right:"+rect.right+"  top:"+rect.top+"  bottom:"+rect.bottom);
+        return rect;
     }
+
+    //将点击的对焦点绘制成50*50的矩阵区域，区域在1000*1000内
+//    private static Rect calculateTapArea(float x, float y, float scaleSize) {
+//        int focusAreaSize = (int) (300 * scaleSize);
+//        int centerX = (int) (x / displayWidth * 2000 - 1000);
+//        int centerY = (int) (y / displayHeight * 2000 - 1000);
+//        int mPadding = 800;//不能到边界,因为对焦会模糊
+//
+//        int halfAreaSize = focusAreaSize / 2;
+//        Rect rect = new Rect();
+//        if (centerX > 1000-halfAreaSize || centerX < -1000+halfAreaSize){//排除边界情况
+//            boolean isX = centerX>0;
+//            rect.left = isX?1000-focusAreaSize:-1000;
+//            rect.right = isX?1000:-1000+focusAreaSize;
+//        }else {
+//            rect.left = centerX-halfAreaSize;
+//            rect.right = centerX+halfAreaSize;
+//        }
+//
+//        if (centerY > 1000-halfAreaSize || centerY < -1000+halfAreaSize){
+//            boolean isY = centerY>0;
+//            rect.top = isY?1000-focusAreaSize:-1000;
+//            rect.bottom = isY?1000:-1000+focusAreaSize;
+//        }else {
+//            rect.top = centerY-halfAreaSize;
+//            rect.bottom = centerY+halfAreaSize;
+//        }
+//
+//        Log.i(TAG, "calculateTapAreaXY: "+"  x:"+x+"  y:"+y+" cX:"+centerX+"  cY:"+centerY);
+//        Log.i(TAG, "calculateTapAreaRect: "+"  left:"+rect.left+"  right:"+rect.right+"  top:"+rect.top+"  bottom:"+rect.bottom);
+//        return rect;
+//    }
 
 
     //min <= x <= max

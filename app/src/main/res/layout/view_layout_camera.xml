@@ -9,7 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <com.example.a47420.camerademo.view.ClickRect
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </com.example.a47420.camerademo.view.ClickRect>
+
+
     <RelativeLayout
+        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

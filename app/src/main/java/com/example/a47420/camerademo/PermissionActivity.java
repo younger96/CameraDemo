@@ -40,5 +40,12 @@ public class PermissionActivity extends Activity {
                 startActivity(new Intent(PermissionActivity.this,CameraActivity.class));
             }
         });
+
+        findViewById(R.id.btn2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PermissionActivity.this,MainActivity.class));
+            }
+        });
     }
 }

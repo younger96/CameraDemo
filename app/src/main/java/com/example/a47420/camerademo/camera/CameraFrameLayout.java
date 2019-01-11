@@ -2,10 +2,6 @@ package com.example.a47420.camerademo.camera;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
@@ -19,7 +15,6 @@ import android.widget.FrameLayout;
 
 import com.example.a47420.camerademo.BuildConfig;
 import com.example.a47420.camerademo.R;
-import com.example.a47420.camerademo.util.SizeUtils;
 
 import java.io.File;
 
@@ -78,7 +73,7 @@ public class CameraFrameLayout extends FrameLayout implements View.OnClickListen
     }
 
     private void handleFocus(int x, int y) {
-        mCameraController.doFocusArea(x,y);
+        mCameraController.doFocusMetringArea(x,y);
     }
 
     public void openCamera() {

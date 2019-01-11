@@ -14,5 +14,5 @@ interface ICamera {
 
     void doCapture(CameraFrameLayout.OnGetPathListener onGetPathListener);//拍照
     void doOpenOrCloseLight();//打开闪光灯
-    void doFocusArea(int x, int y);//点击对焦
+    void doFocusMetringArea(int x, int y);//点击对焦
 }

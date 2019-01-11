@@ -18,8 +18,6 @@ public class CameraActivity extends BaseActivity {
 
 
 
-
-
     @Override
     protected void initView() {
         cameraFrameLayout = findViewById(R.id.cameraSurfaceView);

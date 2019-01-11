@@ -15,7 +15,7 @@ public class FileUtil {
 
     //保存照片
     public static void saveBitmap(Bitmap b) {
-        String jpegName = rootPath + "/" + getTime() + ".jpg";
+        String jpegName = rootPath + getTime() + ".jpg";
         try {
             FileOutputStream fout = new FileOutputStream(jpegName);
             BufferedOutputStream bos = new BufferedOutputStream(fout);
