@@ -7,7 +7,9 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -348,18 +350,26 @@ public class BitmapUtils {
         return Bitmap.createBitmap(width,heigth,Bitmap.Config.ARGB_4444);
     }
 
-    public static byte[] Bitmap2Bytes(Bitmap bm) {
+    public static byte[] bitmap2Bytes(Bitmap bm) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
         return baos.toByteArray();
     }
 
-    public static Bitmap Bytes2Bimap(byte[] b) {
+    public static Bitmap bytes2Bimap(byte[] b) {
         if (b.length != 0) {
             return BitmapFactory.decodeByteArray(b, 0, b.length);
         } else {
             return null;
         }
     }
+
+    public static Bitmap uri2Bimap(String path,Context context) throws IOException {
+        File file = new File(path);
+        Uri uri = Uri.fromFile(file);
+        return MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
+    }
+
+
 
 }
