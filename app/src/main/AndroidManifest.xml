@@ -35,6 +35,7 @@
         <activity android:name=".CameraActivity">
 
         </activity>
+        <activity android:name=".ImageActivity" />
 
 
         <provider

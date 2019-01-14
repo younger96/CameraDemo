@@ -14,7 +14,10 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.example.a47420.camerademo.BuildConfig;
+import com.example.a47420.camerademo.CameraActivity;
+import com.example.a47420.camerademo.ImageActivity;
 import com.example.a47420.camerademo.R;
+import com.example.a47420.camerademo.util.PhotoBitmapUtils;
 
 import java.io.File;
 
@@ -101,19 +104,23 @@ public class CameraFrameLayout extends FrameLayout implements View.OnClickListen
                     @Override
                     public void getPath(final String path) {
                         //将图片交给Image程序处理
-                        File file = new File(path);
+//                        File file = new File(path);
+//                        Intent intent = new Intent();
+//                        intent.setAction("android.intent.action.VIEW");
+//                        //判断是否是AndroidN以及更高的版本
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                            Uri contentUri = FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID + ".fileProvider", file);
+//                            intent.setDataAndType(contentUri, "image/jpeg");
+//                        } else {
+//                            Uri uri = Uri.fromFile(file);
+//                            intent.setDataAndType(uri, "image/jpeg");
+//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        }
+
                         Intent intent = new Intent();
-                        intent.setAction("android.intent.action.VIEW");
-                        //判断是否是AndroidN以及更高的版本
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            Uri contentUri = FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID + ".fileProvider", file);
-                            intent.setDataAndType(contentUri, "image/jpeg");
-                        } else {
-                            Uri uri = Uri.fromFile(file);
-                            intent.setDataAndType(uri, "image/jpeg");
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        }
+                        intent.setClass(mContext,ImageActivity.class);
+                        intent.putExtra("path",path);
                         mContext.startActivity(intent);
                     }
                 });

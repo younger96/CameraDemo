@@ -1,6 +1,7 @@
 package com.example.a47420.camerademo.camera;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.hardware.Camera;
@@ -12,7 +13,9 @@ import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import com.example.a47420.camerademo.util.BitmapUtils;
 import com.example.a47420.camerademo.util.FileUtil;
+import com.example.a47420.camerademo.util.PhotoBitmapUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,8 +51,8 @@ public class CameraController implements ICamera{
         int rotation=((WindowManager)mSurfaceView.getContext().getSystemService(Context.WINDOW_SERVICE))
                 .getDefaultDisplay().getRotation();
         if(!openCamera(type))return;
-        setParameters(camera,rotation);
         setDisplayOrientation(camera,rotation);
+        setParameters(camera,rotation);
         setPreviewDisplay(camera,mSurfaceHolder);
         camera.startPreview();
     }
@@ -175,6 +178,8 @@ public class CameraController implements ICamera{
             }
         });
         parameters.setPictureSize(picSize.width,picSize.height);
+
+
         //如果相机支持自动聚焦，则设置相机自动聚焦，否则不设置
         if(parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)){
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
@@ -183,14 +188,25 @@ public class CameraController implements ICamera{
         //设置滤镜效果
 //        parameters.setColorEffect(Camera.Parameters.EFFECT_AQUA);
 
+        //设置场景
+//        parameters.setSceneMode(Camera.Parameters.SCENE_MODE_NIGHT_PORTRAIT);
+
         //设置特效白平衡
 //        parameters.setZoom();
+
+        //设置曝光
+//        if (!(parameters.getMinExposureCompensation() == 0 && parameters.getMaxExposureCompensation() == 0)){
+//            Log.i(TAG, "setParameters:  minExposure:"+parameters.getMinExposureCompensation()+"  maxExposure:"+parameters.getMaxExposureCompensation());
+//              int max = parameters.getMaxExposureCompensation();
+//              int min = parameters.getMinExposureCompensation();
+//            parameters.setExposureCompensation(min);
+//        }
 
         camera.setParameters(parameters);
         resizeDisplayView();
     }
 
-    //相机使用第三步，设置相机预览方向
+    //相机使用第三步，设置相机预览方向 旋转九十度去适应屏幕的展示
     private void setDisplayOrientation(Camera camera,int rotation){
         Log.i(TAG, "setDisplayOrientation: "+rotation);
         if(rotation== Surface.ROTATION_0||rotation==Surface.ROTATION_180){
