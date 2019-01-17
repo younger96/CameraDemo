@@ -39,14 +39,12 @@ public class FileUtil {
         long start = System.currentTimeMillis();
         String jpegName = rootPath + "/" + getTime() + ".png";
         try {
-            Bitmap bitmap = BitmapUtils.createBitmapRotate(BitmapUtils.Bytes2Bimap(bytes),90);
             File file = new File(jpegName);
             if(!file.exists())
                 //创建文件
                 file.createNewFile();
             FileOutputStream outputStream = new FileOutputStream(jpegName);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-            outputStream.flush();
+            outputStream.write(bytes);
             outputStream.close();
             Log.i(TAG, "saveBitmap: "+(System.currentTimeMillis()-start));
         } catch (IOException e) {
