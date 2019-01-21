@@ -11,14 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Camera1"
-        android:id="@+id/btn"/>
+        android:id="@+id/camera1"/>
 
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Camera2"
-        android:id="@+id/btn1"/>
+        android:id="@+id/camera2"/>
 
 
     <Button

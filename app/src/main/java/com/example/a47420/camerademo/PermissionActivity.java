@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.a47420.camerademo.camera1.CameraActivity;
+import com.example.a47420.camerademo.camera2.Camera2Activity;
 import com.example.a47420.camerademo.util.PermissionManager;
 
 /**
@@ -34,10 +36,17 @@ public class PermissionActivity extends Activity {
 //        }
 
 
-        findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.camera1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(PermissionActivity.this,CameraActivity.class));
+            }
+        });
+
+        findViewById(R.id.camera2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PermissionActivity.this,Camera2Activity.class));
             }
         });
 

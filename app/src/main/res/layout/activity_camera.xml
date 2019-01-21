@@ -4,12 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.example.a47420.camerademo.camera.CameraFrameLayout
+    <com.example.a47420.camerademo.camera1.camera.CameraFrameLayout
         android:id="@+id/cameraSurfaceView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
-    </com.example.a47420.camerademo.camera.CameraFrameLayout>
+    </com.example.a47420.camerademo.camera1.camera.CameraFrameLayout>
 
 </FrameLayout>

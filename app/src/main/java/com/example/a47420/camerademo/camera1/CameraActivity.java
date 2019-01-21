@@ -1,12 +1,8 @@
-package com.example.a47420.camerademo;
+package com.example.a47420.camerademo.camera1;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.SurfaceView;
-
+import com.example.a47420.camerademo.R;
 import com.example.a47420.camerademo.base.BaseActivity;
-import com.example.a47420.camerademo.camera.CameraController;
-import com.example.a47420.camerademo.camera.CameraFrameLayout;
+import com.example.a47420.camerademo.camera1.camera.CameraFrameLayout;
 
 /**
  * 2018/12/19

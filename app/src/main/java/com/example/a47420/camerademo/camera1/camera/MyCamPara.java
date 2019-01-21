@@ -1,4 +1,4 @@
-package com.example.a47420.camerademo.camera;
+package com.example.a47420.camerademo.camera1.camera;
 
 import java.util.Collections;
 import java.util.Comparator;

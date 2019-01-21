@@ -1,6 +1,4 @@
-package com.example.a47420.camerademo.camera;
-
-import android.graphics.Rect;
+package com.example.a47420.camerademo.camera1.camera;
 
 /**
  * 2018/12/19

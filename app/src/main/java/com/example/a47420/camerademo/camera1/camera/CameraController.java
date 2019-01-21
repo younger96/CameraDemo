@@ -1,7 +1,6 @@
-package com.example.a47420.camerademo.camera;
+package com.example.a47420.camerademo.camera1.camera;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.hardware.Camera;
@@ -13,9 +12,7 @@ import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.example.a47420.camerademo.util.BitmapUtils;
 import com.example.a47420.camerademo.util.FileUtil;
-import com.example.a47420.camerademo.util.PhotoBitmapUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,10 +1,7 @@
-package com.example.a47420.camerademo.camera;
+package com.example.a47420.camerademo.camera1.camera;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.support.v4.content.FileProvider;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -13,13 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
-import com.example.a47420.camerademo.BuildConfig;
-import com.example.a47420.camerademo.CameraActivity;
 import com.example.a47420.camerademo.ImageActivity;
 import com.example.a47420.camerademo.R;
-import com.example.a47420.camerademo.util.PhotoBitmapUtils;
-
-import java.io.File;
 
 /**
  * 2018/12/20
