@@ -74,12 +74,40 @@ public class Camera2Activity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void init() {
-
+        canUseCamera2(this);
     }
 
     @Override
     protected void initView() {
         mTextureView = findViewById(R.id.texture);
+    }
+
+    private void canUseCamera2(Context context) {
+        try {
+            CameraManager manager =
+                    (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+            String[] cameraIds = manager.getCameraIdList();
+            if (cameraIds.length > 0) {
+                for (String id : manager.getCameraIdList()) {
+                    CameraCharacteristics characteristics = manager.getCameraCharacteristics(id);
+                    Integer level =
+                            characteristics.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL);
+                    if (level == 0){
+                        showToast("LIMITED");
+                    }else if (level == 1){
+                        showToast("FULL");
+                    }else if(level == 2){
+                        showToast("LEGACY");
+                    }else if (level == 3){
+                        showToast("LEVEL_3");
+                    }else if(level == 4){
+                        showToast("EXTERNAL");
+                    }
+                }
+            }
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
