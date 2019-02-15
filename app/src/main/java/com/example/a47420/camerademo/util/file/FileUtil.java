@@ -1,4 +1,4 @@
-package com.example.a47420.camerademo.util;
+package com.example.a47420.camerademo.util.file;
 
 import android.graphics.Bitmap;
 import android.os.Environment;
@@ -15,11 +15,10 @@ import static java.lang.System.currentTimeMillis;
 
 public class FileUtil {
     private static final String TAG = "FileUtil";
-    private static final String rootPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 
     //保存照片
     public static void saveBitmap(Bitmap b) {
-        String jpegName = rootPath + getTime() + ".png";
+        String jpegName = OutFileGenerator.IMAGE_FOLDER +"/"+ getTime() + ".png";
         try {
             FileOutputStream fout = new FileOutputStream(jpegName);
             BufferedOutputStream bos = new BufferedOutputStream(fout);
@@ -36,26 +35,13 @@ public class FileUtil {
         if (bytes == null || bytes.length == 0){
             return null;
         }
-        long start = System.currentTimeMillis();
-        String jpegName = rootPath + "/" + getTime() + ".png";
-        try {
-            File file = new File(jpegName);
-            if(!file.exists())
-                //创建文件
-                file.createNewFile();
-            FileOutputStream outputStream = new FileOutputStream(jpegName);
-            outputStream.write(bytes);
-            outputStream.close();
-            Log.i(TAG, "saveBitmap: "+(System.currentTimeMillis()-start));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String jpegName =  OutFileGenerator.generateFile(getTime() + ".png",bytes);
         return jpegName;
     }
 
     //获取视频存储路径
     public static String getMediaOutputPath() {
-        return rootPath + "/" + getTime() + ".mp4";
+        return OutFileGenerator.IMAGE_FOLDER + "/" + getTime() + ".mp4";
     }
 
     private static String getTime() {

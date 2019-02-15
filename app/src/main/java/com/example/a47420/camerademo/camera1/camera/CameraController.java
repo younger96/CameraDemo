@@ -12,12 +12,10 @@ import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.example.a47420.camerademo.util.FileUtil;
+import com.example.a47420.camerademo.util.file.FileUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -158,24 +156,18 @@ public class CameraController implements ICamera{
         Camera.Parameters parameters=camera.getParameters();
 
         //PreviewSize设置为设备支持的最高分辨率
-        final Camera.Size size=Collections.max(camera.getParameters().getSupportedPreviewSizes(),new Comparator<Camera.Size>() {
-            @Override
-            public int compare(Camera.Size lhs, Camera.Size rhs) {
-                return lhs.width*lhs.height-rhs.width*rhs.height;
-            }
-        });
+//        final Camera.Size size=Collections.max(camera.getParameters().getSupportedPreviewSizes(),new Comparator<Camera.Size>() {
+//                        @Override
+//                        public int compare(Camera.Size lhs, Camera.Size rhs) {
+//                            return lhs.width*lhs.height-rhs.width*rhs.height;
+//                        }
+//        });
+        final Camera.Size size = MyCamPara.getInstance().getPreviewSize(camera.getParameters().getSupportedPreviewSizes(), 800);
         parameters.setPreviewSize(size.width,size.height);
 
         //PictureSize设置为和预览大小最近的
-        Camera.Size picSize=Collections.max(parameters.getSupportedPictureSizes(), new Comparator<Camera.Size>() {
-            @Override
-            public int compare(Camera.Size lhs, Camera.Size rhs) {
-                return (int) (Math.sqrt(Math.pow(size.width-rhs.width,2)+Math.pow(size.height-rhs.height,2))-
-                        Math.sqrt(Math.pow(size.width-lhs.width,2)+Math.pow(size.height-lhs.height,2)));
-            }
-        });
+        final Camera.Size picSize = MyCamPara.getInstance().getPictureSize(camera.getParameters().getSupportedPictureSizes(), 800);
         parameters.setPictureSize(picSize.width,picSize.height);
-
 
         //如果相机支持自动聚焦，则设置相机自动聚焦，否则不设置
         if(parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)){

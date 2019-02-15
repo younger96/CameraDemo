@@ -1,10 +1,7 @@
 package com.example.a47420.camerademo;
 
-import android.content.ContentResolver;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -12,9 +9,7 @@ import android.widget.ImageView;
 
 import com.example.a47420.camerademo.base.BaseActivity;
 import com.example.a47420.camerademo.util.BitmapUtils;
-import com.example.a47420.camerademo.util.FileUtil;
 
-import java.io.File;
 import java.io.IOException;
 
 /**

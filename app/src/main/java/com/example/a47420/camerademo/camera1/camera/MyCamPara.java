@@ -10,6 +10,7 @@ import android.hardware.Camera.Size;
 public class MyCamPara {
 	private final CameraSizeComparator sizeComparator = new CameraSizeComparator();
 	private static MyCamPara myCamPara = null;
+	private static float previewRate = 1.3f;
 	private MyCamPara(){
 		
 	}
@@ -26,30 +27,30 @@ public class MyCamPara {
 	public  Size getPreviewSize(List<Camera.Size> list, int th){
 		Collections.sort(list, sizeComparator);
 		Size size=null;
-		for(int i=0;i<list.size();i++){
+		for(int i=list.size()-1;i>=0;i--){
 			size=list.get(i);
-			if((size.width>th)&&equalRate(size, 1.3f)){
+			if(size.width>th){
 				break;
 			}
 		}
+		previewRate = (float) size.width/size.height;
 		return size;
 	}
 	public Size getPictureSize(List<Camera.Size> list, int th){
 		Collections.sort(list, sizeComparator);
 		Size size=null;
-		for(int i=0;i<list.size();i++){
+		for(int i=list.size()-1;i>=0;i--){
 			size=list.get(i);
-			if((size.width>th)&&equalRate(size, 1.3f)){
+			if((size.width>th)&&equalRate(size, previewRate)){
 				break;
 			}
 		}
 		return size;
-		
 	}
 	
 	public boolean equalRate(Size s, float rate){
 		float r = (float)(s.width)/(float)(s.height);
-		if(Math.abs(r - rate) <= 0.2)
+		if(Math.abs(r - rate) <= 0.0002)
 		{
 			return true;
 		}

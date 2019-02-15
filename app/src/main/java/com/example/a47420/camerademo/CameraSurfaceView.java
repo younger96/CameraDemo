@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.a47420.camerademo.util.CamParaUtil;
-import com.example.a47420.camerademo.util.FileUtil;
+import com.example.a47420.camerademo.util.file.FileUtil;
 
 import java.io.IOException;
 
